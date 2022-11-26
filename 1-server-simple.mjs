@@ -1,8 +1,6 @@
 import log from '@ajar/marker'; 
-import http, { Agent } from 'http';
-import { url } from 'inspector';
-import querystring from 'querystring'
-// import protocol from 'protocol'
+import http from 'http';
+import urlHelper from 'url'
 
 // const PORT = process.env.PORT;
 // const HOST = process.env.HOST;
@@ -32,8 +30,8 @@ const server = http.createServer( (req,res)=> {
         host: `${HOST}:${PORT}`,
         protocol: "",
         httpVersion: httpVersion,
-        pathname: url.pathname,
-        querystring: querystring.parse(url),
+        pathName: urlHelper.parse(url,true).pathname,
+        queryString:urlHelper.parse(urlHelper.parse(url,true).search,true).query,
         user_agent: headers['user-agent'],
         connection: headers.connection
     }
