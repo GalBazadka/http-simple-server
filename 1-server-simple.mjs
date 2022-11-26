@@ -2,6 +2,7 @@ import log from '@ajar/marker';
 import http, { Agent } from 'http';
 import { url } from 'inspector';
 import querystring from 'querystring'
+// import protocol from 'protocol'
 
 // const PORT = process.env.PORT;
 // const HOST = process.env.HOST;
@@ -10,7 +11,8 @@ const { PORT, HOST } = process.env;
 
 //create an http web server
 const server = http.createServer( (req,res)=> {
-    const {url, method, httpVersion, headers, pathname} = req
+    const { url, method, httpVersion, headers, pathname} = req;
+
     res.statusCode = 200;
     // res.setHeader('Content-Type','text/plain')
     // res.setHeader('Content-Type','text/html')
@@ -22,23 +24,30 @@ const server = http.createServer( (req,res)=> {
     res.setHeader('Content-Type','application/json')
     res.setHeader('some-single-header', 'some-single-value')
 
+
     let obj = {
         href: `http://${HOST}:${PORT}${url}`,
         url,
         method,
         host: `${HOST}:${PORT}`,
-        protocol: url.protocol,
+        protocol: "",
         httpVersion: httpVersion,
-        pathname,
+        pathname: url.pathname,
         querystring: querystring.parse(url),
         user_agent: headers['user-agent'],
         connection: headers.connection
     }
+    // console.log(querystring.parse(url).temp)
+    // console.log(searchParams.parse(url))
+    console.log(obj.href.pathname)
     res.end(JSON.stringify(obj));
 });
+
 
 //have the server listen to a given port
 server.listen(PORT,HOST, err => {
     if(err) log.error(err);
     else log.magenta(`🌎  listening on`,`http://${HOST}:${PORT}`);
 });
+
+
